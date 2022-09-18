@@ -4,7 +4,9 @@ import de.shevchuk.urlshortener.exception.UrlNotFoundException;
 import de.shevchuk.urlshortener.model.ResponseUrlDto;
 import de.shevchuk.urlshortener.model.UrlDto;
 import de.shevchuk.urlshortener.service.ShortenerService;
+import java.io.IOException;
 import java.util.List;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -18,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/v1/short-urls")
+@RequestMapping("/v1/urls")
 public class ShortenerController {
 
     private final ShortenerService shortenerService;
@@ -29,8 +31,9 @@ public class ShortenerController {
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseUrlDto getLongUrl(@PathVariable("id") String id) throws UrlNotFoundException {
-        return shortenerService.getUrl(id);
+    public void redirect(@PathVariable("id") String id, HttpServletResponse response) throws IOException, UrlNotFoundException {
+        final ResponseUrlDto urlDto = shortenerService.getUrl(id);
+        response.sendRedirect(urlDto.getUrl());
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

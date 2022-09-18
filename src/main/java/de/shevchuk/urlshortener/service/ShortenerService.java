@@ -16,7 +16,7 @@ public class ShortenerService {
     public Map<String, String> urlMap = new HashMap<>() {};
 
     public ResponseUrlDto createShortUrl(String longUrl) {
-        String id = Utils.encodeIntoBase62(longUrl);
+        String id = Utils.generateRandomUrlId();
         urlMap.put(id, longUrl);
         return buildResponseUrlDto(longUrl, id);
     }

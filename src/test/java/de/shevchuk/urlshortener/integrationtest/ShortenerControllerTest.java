@@ -1,6 +1,5 @@
 package de.shevchuk.urlshortener.integrationtest;
 
-import static org.hamcrest.Matchers.is;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -39,14 +38,13 @@ public class ShortenerControllerTest {
     }
 
     @Test
-    public void testGetUrlById() throws Exception {
+    public void testRedirectUrlById() throws Exception {
         UrlDto longUrl2 = buildUrlDto(LONG_URL_2);
         final String urlId = createAndAssertShortUrlId(longUrl2);
 
-        mvc.perform(get("/v1/short-urls/" + urlId)
+        mvc.perform(get("/v1/urls/" + urlId)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("url", is(LONG_URL_2)))
+            .andExpect(status().is3xxRedirection())
             .andReturn();
     }
 
@@ -56,12 +54,12 @@ public class ShortenerControllerTest {
         String urlId = createAndAssertShortUrlId(longUrl1);
 
         //delete
-        mvc.perform(delete("/v1/short-urls/" + urlId)
+        mvc.perform(delete("/v1/urls/" + urlId)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
             .andExpect(status().isOk());
 
         //check that url doesn't exist more
-        mvc.perform(get("/v1/short-urls/" + urlId)
+        mvc.perform(get("/v1/urls/" + urlId)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON))
             .andExpect(status().isNotFound());
     }
@@ -73,7 +71,7 @@ public class ShortenerControllerTest {
     }
 
     private String createAndAssertShortUrlId(UrlDto longUrl) throws Exception {
-        final MvcResult createUrlResult = mvc.perform(post("/v1/short-urls")
+        final MvcResult createUrlResult = mvc.perform(post("/v1/urls")
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(longUrl)))
             .andExpect(status().isOk())
