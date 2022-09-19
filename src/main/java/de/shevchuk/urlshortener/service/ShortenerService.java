@@ -1,54 +1,54 @@
 package de.shevchuk.urlshortener.service;
 
+import de.shevchuk.urlshortener.entity.Url;
 import de.shevchuk.urlshortener.exception.UrlNotFoundException;
 import de.shevchuk.urlshortener.model.ResponseUrlDto;
+import de.shevchuk.urlshortener.repository.UrlRepository;
 import de.shevchuk.urlshortener.util.Utils;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
-import lombok.RequiredArgsConstructor;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
-@RequiredArgsConstructor
+@AllArgsConstructor
 public class ShortenerService {
-    public Map<String, String> urlMap = new HashMap<>() {};
+
+    public UrlRepository urlRepository;
 
     public ResponseUrlDto createShortUrl(String longUrl) {
         String id = Utils.generateRandomUrlId();
-        urlMap.put(id, longUrl);
-        return buildResponseUrlDto(longUrl, id);
-    }
-
-    private static ResponseUrlDto buildResponseUrlDto(String longUrl, String id) {
-        return ResponseUrlDto.builder()
+        urlRepository.save(Url.builder()
             .id(id)
             .url(longUrl)
-            .build();
-    }
-
-    public ResponseUrlDto getUrl(String id) throws UrlNotFoundException {
-        final String longUrl = getAndValidateUrl(id);
-        return buildResponseUrlDto(longUrl, id);
+            .build());
+        return buildResponseUrlDto(id, longUrl);
     }
 
     public String getAndValidateUrl(String id) throws UrlNotFoundException {
-        final String url = urlMap.get(id);
-        if (url == null) {
+        final Optional<Url> url = urlRepository.findById(id);
+        if (url.isEmpty()) {
             throw new UrlNotFoundException(String.format("The URL-ID %s you're trying to get does not exist.", id));
         }
-        return url;
+        return url.get().getUrl();
+    }
+
+    public List<ResponseUrlDto> getAllUrls() {
+        return urlRepository.findAll().stream()
+            .map(u -> buildResponseUrlDto(u.getId(), u.getUrl()))
+            .collect(Collectors.toList());
     }
 
     public void deleteUrl(String id) throws UrlNotFoundException {
         getAndValidateUrl(id);
-        urlMap.remove(id);
+        urlRepository.deleteById(id);
     }
 
-    public List<ResponseUrlDto> getAllUrls() {
-        return urlMap.entrySet().stream()
-            .map(url -> buildResponseUrlDto(url.getValue(), url.getKey()))
-            .collect(Collectors.toList());
+    private static ResponseUrlDto buildResponseUrlDto(String id, String longUrl) {
+        return ResponseUrlDto.builder()
+            .id(id)
+            .url(longUrl)
+            .build();
     }
 }

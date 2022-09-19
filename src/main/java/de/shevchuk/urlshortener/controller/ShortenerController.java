@@ -32,8 +32,8 @@ public class ShortenerController {
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public void redirect(@PathVariable("id") String id, HttpServletResponse response) throws IOException, UrlNotFoundException {
-        final ResponseUrlDto urlDto = shortenerService.getUrl(id);
-        response.sendRedirect(urlDto.getUrl());
+        final String url = shortenerService.getAndValidateUrl(id);
+        response.sendRedirect(url);
     }
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)

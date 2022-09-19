@@ -5,6 +5,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 
 public final class Utils {
 
+    @Deprecated //experimented with base62 encoding
     public static String encodeIntoBase62(String encodedString) {
         Base62 base62 = Base62.createInstance();
         final byte[] encoded = base62.encode(encodedString.getBytes());
