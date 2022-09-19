@@ -1,5 +1,7 @@
 package de.shevchuk.urlshortener.integrationtest;
 
+import static de.shevchuk.urlshortener.TestConstants.LONG_URL_1;
+import static de.shevchuk.urlshortener.TestConstants.LONG_URL_2;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -9,6 +11,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jayway.jsonpath.JsonPath;
 import de.shevchuk.urlshortener.model.UrlDto;
+import de.shevchuk.urlshortener.repository.UrlRepository;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -22,14 +26,17 @@ import org.springframework.test.web.servlet.MvcResult;
 @AutoConfigureMockMvc
 public class ShortenerControllerTest {
 
-    public static final String LONG_URL_1 = "http://thisIsLongUrl1.com";
-    public static final String LONG_URL_2 = "http://thisIsLongUrl2.com";
-
     @Autowired
     private MockMvc mvc;
     @Autowired
     private ObjectMapper objectMapper;
+    @Autowired
+    private UrlRepository urlRepository;
 
+    @BeforeEach
+    public void resetDb() {
+        urlRepository.deleteAll();
+    }
 
     @Test
     public void testShortUrlIdCreation() throws Exception {
