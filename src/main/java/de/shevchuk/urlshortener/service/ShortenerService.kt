@@ -14,8 +14,12 @@ import java.util.*
 @AllArgsConstructor
 class ShortenerService(@Autowired val urlRepository: UrlRepository) {
 
-    fun createShortUrl(longUrl: String): ResponseUrlDto {
-        val id: String = Utils.generateRandomUrlId()
+    @Synchronized fun createShortUrl(longUrl: String): ResponseUrlDto {
+        var id: String
+        do {
+            id = Utils.generateRandomUrlId()
+        } while (urlRepository.findById(id).isPresent)
+
         urlRepository.save(
             Url(id, longUrl)
         )

@@ -29,7 +29,7 @@ class ShortenerServiceTest(@Autowired val shortenerService: ShortenerService, @A
     fun testShortUrlIdCreation() {
         val url: ResponseUrlDto = createAndSaveUrl(LONG_URL_1)
         val savedUrl: Optional<Url> = urlRepository.findById(url.id)
-        Assertions.assertTrue(savedUrl.isPresent)
+        assertTrue(savedUrl.isPresent)
         assertEquals(url.id, savedUrl.get().id)
         assertEquals(url.url, savedUrl.get().url)
     }

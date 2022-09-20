@@ -6,11 +6,11 @@ The goal of this project is to build production-ready MVP of a URL shortener. Th
 
 ## Tech stack:
 * Java 11 (original project programming language)
-* Kotlin (language the project was migrated into)
+* Kotlin 1.7.0 (language the project was migrated into)
 * Docker to build image & run the project from anywhere
 * Docker-compose to start the DB in any environment
 * Redis as a key-value DB
-* Lettuce
+* Lettuce as a Redis client
 
 ## How to run this project:
 Create a local Redis DB
@@ -54,7 +54,7 @@ FLUSHDB //clean up DB in case of app restarts
 | POST   | /v1/urls      | Creates a short url for a given long url |
 | GET    | /v1/urls/{id} | Redirect user to the long URL address    |
 | GET    | /v1/urls      | Returns all the existing short URL IDs   |
-| DELETE | /v1/urls/{id} | Deletes the short+long url pair          |
+| DELETE | /v1/urls/{id} | Deletes the short+long url pairs         |
 
 ### Examples
 
@@ -119,5 +119,6 @@ But what can be improved in the future?
 
 ## Tutorials and sources
 * [Spring boot - Kotlin tutorial](https://spring.io/guides/tutorials/spring-boot-kotlin/)
+* [Spring RESTful web service - Kotlin tutorial](https://kotlinlang.org/docs/jvm-spring-boot-restful.html#add-database-support)
 * [Redis hashes](https://redis.io/docs/data-types/hashes/)
-* [Base62 encodig library (deprecated from implementation)](https://github.com/seruco/base62)
+* [Base62 encoding library (deprecated from implementation)](https://github.com/seruco/base62)
