@@ -1,4 +1,7 @@
 # Read Me First
+This project provides an API to manage shortened links for long URLs.
+The user can create and delete a link, get all the stored short-long URL pairs and also be redirected to a page, by calling the short link.
+
 The goal of this project is to build production-ready MVP of a URL shortener. Therefore, it must be:
 * Well-documented
 * Well-tested
