@@ -46,15 +46,17 @@ FLUSHDB //clean up DB in case of app restarts
 
 ## Assumptions:
 1. We expect way more READs than WRITEs
+2. We want a fast redirection (fast lookup for the short link given the long URL)
+3. We want our link as short as possible
 
 ## Endpoints:
 
-| Method | Resource      | Description                              |
-|--------|---------------|------------------------------------------|
-| POST   | /v1/urls      | Creates a short url for a given long url |
-| GET    | /v1/urls/{id} | Redirect user to the long URL address    |
-| GET    | /v1/urls      | Returns all the existing short URL IDs   |
-| DELETE | /v1/urls/{id} | Deletes the short+long url pairs         |
+| Method | Resource      | Description                               |
+|--------|---------------|-------------------------------------------|
+| POST   | /v1/urls      | Creates a short link for a given long url |
+| GET    | /v1/urls/{id} | Redirect user to the long URL address     |
+| GET    | /v1/urls      | Returns all the existing short URL IDs    |
+| DELETE | /v1/urls/{id} | Deletes the short+long url pairs          |
 
 ### Examples
 
@@ -114,11 +116,14 @@ A simple 200 OK response is expected, without a body.
 Assuming we don't want to over-engineer the MVP, only the basic requirements have been implemented.
 But what can be improved in the future?
 * Once implementing registration, add an API rate limit for security/monetization reasons
-* Add a counter for the amount of redirections for dashboarding, monetization and additional business value
+* Enable expiration of links after a certain time period
+* Add a counter for the amount of redirections for tracking, monetization and additional business value
 * Enable a customizable link as an upselling feature
 
 ## Tutorials and sources
 * [Spring boot - Kotlin tutorial](https://spring.io/guides/tutorials/spring-boot-kotlin/)
 * [Spring RESTful web service - Kotlin tutorial](https://kotlinlang.org/docs/jvm-spring-boot-restful.html#add-database-support)
+* [Java vs. Kotlin, annotations and patterns](https://levelup.gitconnected.com/kotlin-makes-lombok-obsolete-9ed3318596cb)
+* [Java vs. Kotlin, static, objects](https://proandroiddev.com/utils-class-in-kotlin-387a09b8d495)
 * [Redis hashes](https://redis.io/docs/data-types/hashes/)
 * [Base62 encoding library (deprecated from implementation)](https://github.com/seruco/base62)
