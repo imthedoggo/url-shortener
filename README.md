@@ -45,9 +45,9 @@ FLUSHDB //clean up DB in case of app restarts
 ```
 
 ## Assumptions:
-1. We expect way more READs than WRITEs
-2. We want a fast redirection (fast lookup for the short link given the long URL)
-3. We want our link as short as possible
+1. Let's assume we expect way more READs than WRITEs
+2. Let's assume we want a fast redirection (fast lookup for the short link given the long URL)
+3. Let's assume we want our link as short as possible (considering ability to serve the expected amount of URL generations)
 
 ## Endpoints:
 
